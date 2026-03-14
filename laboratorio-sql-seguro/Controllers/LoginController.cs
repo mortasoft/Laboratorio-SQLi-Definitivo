@@ -6,6 +6,13 @@ namespace LaboratorioSQLi.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public LoginController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // Ruta: GET /Login
         [HttpGet]
         public IActionResult Index()
@@ -17,8 +24,9 @@ namespace LaboratorioSQLi.Controllers
         [HttpPost]
         public IActionResult VulnerableLogin(string usuario, string password)
         {
-            // Cadena de conexión (Asegúrate de que el Server coincida con el nombre en tu Docker)
-            string connectionString = "Server=localhost;Database=LabSQLi;User Id=sa;Password=Password_Fuerte_123!;TrustServerCertificate=True;";
+            // Cadena de conexión
+            string connectionString = _configuration.GetConnectionString("DefaultConnection") 
+                ?? "Server=db;Database=LabSQLi;User Id=sa;Password=Password_Fuerte_123!;TrustServerCertificate=True;";
 
             // ✅ SEGURIDAD: Usamos @user y @pass como marcadores de posición (placeholders)
             // Ya no concatenamos variables directamente en el string de la consulta.

@@ -6,6 +6,13 @@ namespace LaboratorioSQLi.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public LoginController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // 1. Muestra el formulario de login (GET)
         [HttpGet]
         public IActionResult Index()
@@ -18,8 +25,8 @@ namespace LaboratorioSQLi.Controllers
         public IActionResult VulnerableLogin(string usuario, string password)
         {
             // CONFIGURACIÓN DE CONEXIÓN
-            // Usamos 'sa' para evitar errores de permisos y el nombre del contenedor 'laboratorio-sql_db_1'
-            string connectionString = "Server=laboratorio-sql_db_1;Database=LabSQLi;User Id=sa;Password=Password_Fuerte_123!;TrustServerCertificate=True;";
+            string connectionString = _configuration.GetConnectionString("DefaultConnection") 
+                ?? "Server=db;Database=LabSQLi;User Id=sa;Password=Password_Fuerte_123!;TrustServerCertificate=True;";
 
             // CONSULTA VULNERABLE (Concatenación directa de strings)
             // Esta es la línea que permite el ataque ' OR 1=1 --
